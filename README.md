@@ -1,6 +1,7 @@
 1. Спроектировать схему БД
 1.1. Номенклатура (наименование, кол-во, цена)
 
+```sql
 CREATE TABLE products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
@@ -9,27 +10,33 @@ CREATE TABLE products (
     category_id UUID REFERENCES categories(id),
     created_at TIMESTAMP DEFAULT NOW()
 );
+```
 
 1.2. Каталог номенклатуры/Дерево категорий
 
+```sql
 CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     parent_id UUID REFERENCES categories(id),
     created_at TIMESTAMP DEFAULT NOW()
 );
+```
 
 1.3. Клиенты (наименование, адрес)
 
+```sql
 CREATE TABLE clients (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     address TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
+```
 
 1.4. Заказы покупателей
-   
+
+```sql
 CREATE TABLE orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     client_id UUID NOT NULL REFERENCES clients(id),
@@ -37,7 +44,9 @@ CREATE TABLE orders (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
+```
 
+```sql
 CREATE TABLE order_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_id UUID NOT NULL REFERENCES orders(id),
@@ -46,11 +55,12 @@ CREATE TABLE order_items (
     created_at TIMESTAMP DEFAULT NOW(),
     UNIQUE(order_id, product_id)
 );
+```
 
 2. SQL запросы
 2.1. Получение информации о сумме товаров заказанных под каждого клиента (Наименование клиента, сумма)
 
-sql
+```sql
 SELECT 
     c.name as client_name,
     SUM(oi.quantity * p.price) as total_amount
@@ -59,16 +69,18 @@ JOIN orders o ON o.client_id = c.id
 JOIN order_items oi ON oi.order_id = o.id
 JOIN products p ON p.id = oi.product_id
 GROUP BY c.id, c.name;
+```
 2.2. Найти количество дочерних элементов первого уровня вложенности для категорий номенклатуры
-sql
+```sql
 SELECT 
     parent.name as category_name,
     COUNT(child.id) as child_count
 FROM categories parent
 LEFT JOIN categories child ON child.parent_id = parent.id
 GROUP BY parent.id, parent.name;
+```
 2.3.1. Топ-5 самых покупаемых товаров за последний месяц
-sql
+```sql
 WITH RECURSIVE category_tree AS (
     SELECT 
         id, 
@@ -103,7 +115,7 @@ WHERE o.created_at >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')
 GROUP BY p.id, p.name, ct.root_name
 ORDER BY total_sold DESC
 LIMIT 5;
-
+```
 
 2.3.2. Анализ оптимизации
 Уже реализованные оптимизации:
