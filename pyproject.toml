@@ -1,0 +1,101 @@
+[project]
+name = "aiti-guru"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+required-version = "23.1.0"
+include = '\.pyi?$'
+exclude = '/(\.git|\.env|\.venv)/'
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+indent-width = 4
+lint.select = ["ALL"]
+lint.ignore = [
+    "ANN001",  # Missing type annotation for function argument
+    "ANN003",  # Missing type annotation for `**kwargs`
+    "ANN201",  # Missing return type annotation for public function
+    "ANN202",  # Missing return type annotation for private function
+    "ANN204",  # Missing return type annotation for special method
+    "ANN205",  # Missing return type annotation for staticmethod
+    "ANN206",  # Missing return type annotation for classmethod
+    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed in `data`
+    "ARG001",  # Unused function argument
+    "ARG002",  # Unused method argument
+    "ARG003",  # Unused class method argument
+    "COM812",  # Trailing comma missing
+    "B008",    # Do not perform function call `Depends` in argument defaults;
+    "D100",    # Missing docstring in public module
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+    "D104",    # Missing docstring in public package
+    "D105",    # Missing docstring in magic method
+    "D106",    # Undocumented public class definitions, for nested classes
+    "D107",    # Missing docstring in `__init__`
+    "D203",    # One blank line required before class docstring
+    "D205",    # One blank line required between summary line and description
+    "D211",    # Ignoring one-blank-line-before-class
+    "D212",    # Multi-line docstring summary should start at the first line
+    "D213",    # Ignoring multi-line-summary-second-line
+    "D400",    # First line should end with a period
+    "D401",    # First line of docstring should be in imperative mood
+    "D415",    # First line should end with a period, question mark, or exclamation point
+    "DTZ005",  # `datetime.datetime.now()` called without a `tz` argument
+    "ERA001",  # Found commented-out cod
+    "FBT001",  # Boolean-typed positional argument in function definition
+    "FBT002",  # Boolean default positional argument in function definition
+    "FIX002",  # ine contains TODO, consider resolving the issue
+    "S101",    # Use of `assert` detected
+    "S311",    # Standard pseudo-random generators are not suitable for cryptographic purposes
+    "SLF001",  # Private member accessed
+    "INP001",  # Add an `__init__.py`
+    "ISC001",  # Implicitly concatenated string literals on one line
+    "PLW0602", # Using global for _ but no assignment is done
+    "PLW0603", # Using the global statement to update
+    "RUF001",  # Ambiguous Unicode characters in strings.
+    "RUF002",  # Docstring contains ambiguous
+    "RUF003",  # Comment contains ambiguous `с`
+    "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
+    "TD002",   # Missing author in TODO; try: `# TODO(<author_name>): ...` or `# TODO @<author_name>: ...
+    "TD003",   # Missing issue link on the line following this TODO
+    "PLR0913", # too-many-arguments
+]
+
+exclude = [
+    ".git",
+    ".idea",
+    ".venv",
+    ".pre-commit-config.yaml",
+    #    "src/tests",
+]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 120
+py_version = 310
+
+[tool.mypy]
+exclude = ["alembic/*", "_pb2*", "postgres-data"]
+
+[[tool.mypy.overrides]]
+module = [
+    "openpyxl.*",
+    "alembic.*",
+    "sqlalchemy.ext.asyncio",
+    "requests",
+    "python-jose",
+    "sqlalchemy_utils.*"
+]
+
+ignore_missing_imports = true
